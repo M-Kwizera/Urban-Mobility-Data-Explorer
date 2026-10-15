@@ -31,7 +31,7 @@ def init_database():
   # Enable foreign keys explicitly for SQLite connection
   conn.execute("PRAGMA foreign_keys = ON;")
 
-  with open(SCHEMA_PATH, "r") as f:
+  with open("db/schema.sql", "r", encoding="utf-8") as f:
     schema_sql = f.read()
 
   conn.executescript(schema_sql)

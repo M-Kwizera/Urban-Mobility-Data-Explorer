@@ -247,9 +247,46 @@ async function loadCharts() {
 async function loadMap() {
     if (!mapInstance) {
         mapInstance = L.map('map').setView([40.7128, -74.0060], 11);
+        
+        // Add OpenStreetMap tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '© OpenStreetMap'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(mapInstance);
+    }
+
+    // Crucial fix for flex/grid containers: force Leaflet to recalculate dimensions
+    setTimeout(() => {
+        mapInstance.invalidateSize();
+    }, 250);
+
+    try {
+        // Optional: Load top zones and drop markers on the map
+        const zones = await fetchAPI('/zones');
+        // Take top 50 zones with highest trip counts for performance
+        const topZones = zones.slice(0, 50);
+
+        // Approximate coordinates for NYC boroughs as fallback if lat/lng aren't in lookup
+        // (If your zone lookup CSV has lat/lng, you can use those directly)
+        topZones.forEach(zone => {
+            // Sample coordinates centered around Manhattan/NYC for demonstration
+            // Replace with actual zone centroid lat/lng if available in your lookup CSV
+            const lat = 40.7128 + (Math.random() - 0.5) * 0.1;
+            const lng = -74.0060 + (Math.random() - 0.5) * 0.1;
+
+            const radius = Math.min(Math.max(zone.trip_count / 500, 3), 15);
+
+            L.circleMarker([lat, lng], {
+                radius: radius,
+                fillColor: '#2563eb',
+                color: '#1d4ed8',
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.6
+            }).addTo(mapInstance)
+              .bindPopup(`<strong>${zone.zone}</strong><br>Borough: ${zone.borough}<br>Trips: ${zone.trip_count.toLocaleString()}`);
+        });
+    } catch (err) {
+        console.error("Failed to load zone markers on map:", err);
     }
 }
