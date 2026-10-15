@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYC Taxi Trip Analytics Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="dashboard-header">
+        <h1>NYC Taxi Trip Analytics</h1>
+        <p>Operational Intelligence, Demand Patterns & Congestion Insights</p>
+        <div id="health-status" class="status-badge checking">Connecting to API...</div>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- Filters Section -->
+        <section class="filters-card">
+            <h2>Filter Parameters</h2>
+            <form id="filter-form">
+                <div class="filter-group">
+                    <label for="filter-hour">Pickup Hour:</label>
+                    <select id="filter-hour">
+                        <option value="">All Hours</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-min-distance">Min Distance (miles):</label>
+                    <input type="number" id="filter-min-distance" step="0.1" min="0" placeholder="e.g. 1.0">
+                </div>
+                <div class="filter-group">
+                    <label for="filter-borough">Borough:</label>
+                    <select id="filter-borough">
+                        <option value="">All Boroughs</option>
+                        <option value="Manhattan">Manhattan</option>
+                        <option value="Brooklyn">Brooklyn</option>
+                        <option value="Queens">Queens</option>
+                        <option value="Bronx">Bronx</option>
+                        <option value="Staten Island">Staten Island</option>
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button type="submit" id="apply-btn" class="btn primary">Apply Filters</button>
+                    <button type="button" id="reset-btn" class="btn secondary">Reset</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Summary Cards Row -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Trips</h3>
+                <p id="stat-total-trips">-</p>
+            </div>
+            <div class="stat-card">
+                <h3>Avg Fare</h3>
+                <p id="stat-avg-fare">-</p>
+            </div>
+            <div class="stat-card">
+                <h3>Avg Distance</h3>
+                <p id="stat-avg-distance">-</p>
+            </div>
+            <div class="stat-card">
+                <h3>Avg Speed</h3>
+                <p id="stat-avg-speed">-</p>
+            </div>
+            <div class="stat-card">
+                <h3>Avg Duration</h3>
+                <p id="stat-avg-duration">-</p>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-grid">
+            <div class="chart-card">
+                <h3>Demand & Speed by Hour</h3>
+                <canvas id="hourlyDemandChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Top Busiest Pick-up Zones (Algorithm)</h3>
+                <canvas id="topZonesChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Map & Table Section -->
+        <section class="data-section">
+            <div class="map-card">
+                <h3>Operational Region Map</h3>
+                <div id="map"></div>
+            </div>
+            
+            <div class="table-card">
+                <div class="table-header">
+                    <h3>Trip Records</h3>
+                    <div class="pagination-controls">
+                        <button id="prev-page" class="btn sm" disabled>Previous</button>
+                        <span id="page-indicator">Page 1</span>
+                        <button id="next-page" class="btn sm">Next</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="trips-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="pickup_datetime">Pickup Time ↕</th>
+                                <th data-sort="trip_distance">Distance (mi) ↕</th>
+                                <th data-sort="fare_amount">Fare ($) ↕</th>
+                                <th data-sort="duration_minutes">Duration (min) ↕</th>
+                                <th data-sort="average_speed_mph">Speed (MPH) ↕</th>
+                                <th>Pickup Zone</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trips-tbody">
+                            <tr><td colspan="6" class="text-center">Loading trips...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="api.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
