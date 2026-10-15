@@ -2,12 +2,7 @@
 
 A full-stack web application for exploring NYC yellow taxi trips. A Python pipeline cleans the raw TLC data and loads it into a normalized SQLite database, a Flask API serves it, and a browser dashboard lets you filter, sort and visualize urban mobility patterns.
 
-- **Video walkthrough (5 min):** TODO: paste video link
-- **Team participation sheet:** TODO: paste sheet link
-- **GitHub repository:** TODO: paste repo link
-
-> Items marked `TODO` are details only the team knows. Fill them in and delete this note before submitting.
-
+- **Video walkthrough (5 min):** TODO: https://youtu.be/gjP6OV1dTT8
 ---
 
 ## Features
